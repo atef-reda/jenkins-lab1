@@ -1,4 +1,9 @@
-FROM openjdk:9
-ADD target/my-maven-docker-project.jar my-maven-docker-project.jar
-ADD agent.sh .
-ENTRYPOINT ["java", "-jar","my-maven-docker-project.jar"]
+# Use the official Nginx base image
+FROM nginx:latest
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
