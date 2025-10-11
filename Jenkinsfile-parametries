@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch to build')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'test', 'prod'], description: 'Deployment environment')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Run test stage?')
+    }
+
+    stages {
+        stage('Preparation') {
+            steps {
+                echo "Selected parameters:"
+                echo "Branch: ${params.BRANCH_NAME}"
+                echo "Environment: ${params.ENVIRONMENT}"
+                echo "Run tests: ${params.RUN_TESTS}"
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo "Checking out branch: ${params.BRANCH_NAME}"
+                git branch: "${params.BRANCH_NAME}", url: 'https://github.com/yourusername/your-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building project on ${params.ENVIRONMENT} environment..."
+                sh 'echo "Simulating build process..."'
+            }
+        }
+
+        stage('Test') {
+            when {
+                expression { params.RUN_TESTS == true }
+            }
+            steps {
+                echo "Running tests..."
+                sh 'echo "Simulating test process..."'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT} environment..."
+                sh 'echo "Simulating deployment..."'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully!"
+        }
+        failure {
+            echo "❌ Pipeline failed!"
+        }
+    }
+}
